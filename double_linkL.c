@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef struct node{
-    int data;
+    int16_t data;
     struct node* next;
     struct node* prev;
 } Node;
 
-Node* createNode(int value){
+Node* createNode(int16_t value){
     Node* newNode = (Node*)malloc(sizeof(Node));
     if(newNode<=0){printf("Malloc failed");}
     newNode->data=value;
@@ -16,7 +17,7 @@ Node* createNode(int value){
     return newNode;
 }
 
-void insertHead(Node **head, int value){
+void insertHead(Node **head, int16_t value){
     Node* newHead = createNode(value);
     if(*head != NULL){
         (*head)->prev=newHead; 
@@ -26,7 +27,7 @@ void insertHead(Node **head, int value){
     *head=newHead;
 }
 
-void insertAtEnd(Node** head, int value){
+void insertAtEnd(Node** head, int16_t value){
     Node* newNode = createNode(value);
     if(*head == NULL){
         *head=newNode;
@@ -41,7 +42,7 @@ void insertAtEnd(Node** head, int value){
     
 }
 
-void insertAtPosition(Node **head,int value, int position){
+void insertAtPosition(Node **head,int16_t value, int position){
     Node* newNode = createNode(value);
     if(position == 0){
         insertHead(head,value);
@@ -52,7 +53,7 @@ void insertAtPosition(Node **head,int value, int position){
         return;
     }
     Node *tptr = *head;
-    for(int i=0;tptr != NULL & i<(position-1);i++){
+    for(int8_t i=0;tptr != NULL & i<(position-1);i++){
         tptr = tptr->next;
     }
     if(tptr == NULL){
@@ -85,7 +86,7 @@ void print_p(Node* head){
         nodeCount++;
         tptr=tptr->next;
     }
-    for(int i=0;i<nodeCount;i++){
+    for(int8_t i=0;i<nodeCount;i++){
         printf("%d =>",tptr->data);
         tptr=tptr->prev;
     }
