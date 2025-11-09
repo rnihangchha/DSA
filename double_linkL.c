@@ -76,6 +76,46 @@ void print_n(Node* head){
     printf("0\n");
 }
 
+void deleteHead(Node** head){
+    Node* dptr = *head;
+    dptr->next->prev =NULL;
+    *head=dptr->next;
+    dptr->next=NULL;
+    
+    free(dptr);
+    
+}
+
+void deleteTail(Node** head){
+    Node* dptr = *head;
+    while(dptr->next->next != NULL){
+        dptr = dptr->next;
+    }
+    free(dptr->next);
+    dptr->next = NULL;
+    
+}
+
+void deleteAtPos(Node** head, int position){
+    if(position==0){
+        deleteHead(head);
+    }
+    else if(position == -1){
+        deleteTail(head);
+    }
+    Node* dptr = *head;
+    for(uint8_t i=0; dptr != NULL && i<(position-1);i++){
+        dptr = dptr->next;
+    }
+    if(dptr == NULL){printf("Out of range\n");exit(0);}
+    Node* next = dptr->next->next;
+    free(dptr->next);
+    dptr->next=NULL;
+    next->prev = dptr;
+    dptr->next = next;
+
+}
+
 void print_p(Node* head){
     if(head==NULL){
         printf("List is EMPTY");
@@ -108,6 +148,14 @@ int main(int argc, char** argv[]){
     insertAtPosition(&head,77,4);
     insertAtPosition(&head,777,-1);
     print_n(head);
-
+    deleteHead(&head);
+    deleteHead(&head);
+    print_n(head);
+    deleteTail(&head);
+    print_n(head);
+    deleteAtPos(&head,2); 
+    print_n(head);
+    print_p(head);
     return 0;
+
 }
