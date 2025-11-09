@@ -10,7 +10,7 @@ typedef struct node{
 
 Node* createNode(int16_t value){
     Node* newNode = (Node*)malloc(sizeof(Node));
-    if(newNode<=0){printf("Malloc failed");}
+    if(newNode == NULL){printf("Malloc failed");}
     newNode->data=value;
     newNode->prev=NULL;
     newNode->next=NULL;
@@ -23,7 +23,6 @@ void insertHead(Node **head, int16_t value){
         (*head)->prev=newHead; 
     }
     newHead->next=*head;
-    newHead->data=value;
     *head=newHead;
 }
 
@@ -53,18 +52,18 @@ void insertAtPosition(Node **head,int16_t value, int position){
         return;
     }
     Node *tptr = *head;
-    for(int8_t i=0;tptr != NULL & i<(position-1);i++){
+    for(int8_t i=0;tptr != NULL && i<(position-1);i++){
         tptr = tptr->next;
     }
     if(tptr == NULL){
         printf("Postion: %d, Out of range", position);
     }
-    newNode->data=value;
-
     newNode->prev=tptr;
     newNode->next=tptr->next;
     tptr->next=newNode;
-    tptr->next->prev=newNode;
+    if(tptr->next != NULL){
+        tptr->next->prev=newNode;
+    }
 }
 
 void print_n(Node* head){
@@ -77,17 +76,29 @@ void print_n(Node* head){
 }
 
 void deleteHead(Node** head){
+    if(*head == NULL){
+        return ;
+    }
     Node* dptr = *head;
-    dptr->next->prev =NULL;
+    if(dptr->next != NULL){
+        dptr->next->prev =NULL;
+    }
     *head=dptr->next;
     dptr->next=NULL;
-    
     free(dptr);
     
 }
 
 void deleteTail(Node** head){
+    if(*head == NULL){
+        return ;
+    }
     Node* dptr = *head;
+    if((*head)->next == NULL){
+        free(*head);
+        *head =NULL;
+        return ;
+    }
     while(dptr->next->next != NULL){
         dptr = dptr->next;
     }
@@ -99,15 +110,17 @@ void deleteTail(Node** head){
 void deleteAtPos(Node** head, int position){
     if(position==0){
         deleteHead(head);
+        return ;
     }
     else if(position == -1){
         deleteTail(head);
+        return ;
     }
     Node* dptr = *head;
     for(uint8_t i=0; dptr != NULL && i<(position-1);i++){
         dptr = dptr->next;
     }
-    if(dptr == NULL){printf("Out of range\n");exit(0);}
+    if(dptr == NULL || dptr->next == NULL){printf("Out of range\n");exit(0);}
     Node* next = dptr->next->next;
     free(dptr->next);
     dptr->next=NULL;
@@ -119,6 +132,7 @@ void deleteAtPos(Node** head, int position){
 void print_p(Node* head){
     if(head==NULL){
         printf("List is EMPTY");
+        return ;
     }
     Node *tptr = head;int nodeCount=1;
     printf("0=>");
